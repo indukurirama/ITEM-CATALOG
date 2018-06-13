@@ -34,4 +34,4 @@ Indian franchises App for Item catalog project This is a python module that crea
 
 * Run Teams.py.
 
-* Run project.py# ITEM-CATALOG
+* Run project.PY
