@@ -1,0 +1,50 @@
+
+
+<html>
+   <head>
+      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+      <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+   </head>
+   <body>
+      <center>
+         <h1 id = "hea"> Edit Team PLayer </h1>
+      </center>
+      <br>
+      <form action="#" method = 'post' id = "sty">
+         <p>Name:</p>
+         <input type ='text' size='30' name='name' placeholder = '{{player.name }}'>
+         <p>Description:</p>
+         <input type ='text' size='30' name='description' placeholder = '{{player.description}}'>
+         <p>Price:</p>
+         <input type ='text' size='30' name='price' placeholder = '{{player.price}}'>
+         <p>Course:
+         <p>
+            {% if player.course == 'BATSMAN' %}
+         <dd><input type ='radio' name='course' value='BATSMAN'checked >BATSMAN</dd>
+         {%else%}
+         <dd><input type ='radio' name='course' value='BATSMAN' >BATSMAN</dd>
+         {% endif %}
+         {% if player.course == 'BOWLER' %}
+         <dd><input type ='radio' name='course' value='BOWLER' checked>BOWLER</dd>
+         {%else%}
+         <dd><input type ='radio' name='course' value='BOWLER'>BOWLER</dd>
+         {% endif %}
+         {% if player.course == 'ALLROUNDER'%}
+         <dd><input type ='radio' name='course' value='ALLROUNDER'checked >ALLROUNDER</dd>
+         {% else %}
+         <dd><input type ='radio' name='course' value='ALLROUNDER'>ALLROUNDER</dd>
+         {% endif %}
+         {%if player.course =='WICKETKEEPER'%}
+         <dd><input type ='radio' name='course' value='WICKETKEEPER'checked >WICKETKEEPER</dd>
+         {% else %}
+         <dd><input type ='radio' name='course' value='WICKETKEEPER'>WICKETKEEPER</dd>
+         {% endif %}
+         <br><br>
+         <input type='submit' value='Edit'>
+         <br><br>
+         <a href = '{{url_for('showFranchises')}}'> Cancel </a>
+      </form>
+   </body>
+</html>
+
+

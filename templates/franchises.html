@@ -1,0 +1,30 @@
+
+
+<html>
+   <head>
+      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+      <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Jua|Shadows+Into+Light" rel="stylesheet">
+   </head>
+   <body>
+      <center>
+         <h1 id = "hea">Franchises</h1>
+      </center>
+      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+      <center>
+         <a href="{{url_for('newFranchise')}}" >
+            <h3 class = "bodi"> Create a New Franchise </h3>
+         </a>
+      </center>
+      {% for franchise in franchises %}
+      <a href = "{{url_for('showTeam', franchise_id = franchise.id)}}">
+         <p class="bodi">{{franchise.name}}</p>
+      </a>
+      <p><a href = "{{url_for('editFranchise',franchise_id = franchise.id)}}">Edit Franchise</a></p>
+      <p> <a href = "{{url_for('deleteFranchise',franchise_id = franchise.id)}}">Delete Franchise</a> </p>
+      <br>
+      {% endfor %}
+   </body>
+   </html
+
+
