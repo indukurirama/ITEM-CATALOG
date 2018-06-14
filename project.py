@@ -45,6 +45,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
 @app.route('/')
 @app.route('/login')
 def showlogin():
@@ -235,6 +236,7 @@ def logout():
         flash("you were not logged in")
         return redirect(url_for('showFranchises'))
 
+
 @app.route('/franchise/<int:franchise_id>/team/JSON')
 def franchiseTeamJSON(franchise_id):
     franchise = session.query(Franchise).filter_by(id=franchise_id).one()
@@ -247,6 +249,7 @@ def franchiseTeamJSON(franchise_id):
 def teamPlayerJSON(franchise_id, team_id):
     Team_Player = session.query(TeamPlayer).filter_by(id=team_id).one()
     return jsonify(Team_Player=Team_Player.serialize)
+
 
 @app.route('/franchise/JSON')
 def franchisesJSON():
@@ -262,15 +265,13 @@ def showFranchises():
     franchises = session.query(Franchise).all()
     # return "This page will show all my franchises"
     return render_template('franchises.html', franchises=franchises)
-
-
-
 # Create a new Franchise
+
 
 @app.route('/franchise/new/', methods=['GET', 'POST'])
 def newFranchise():
     if 'username' not in login_session:
-	return redirect('/login')
+        return redirect('/login')
     if request.method == 'POST':
         newFranchise = Franchise(name=request.form['name'])
         session.add(newFranchise)
@@ -278,30 +279,30 @@ def newFranchise():
         return redirect(url_for('showFranchises'))
     else:
         return render_template('newFranchise.html')
-   # return "This page will be for making a new franchise"
+# return "This page will be for making a new franchise"
 
 # Edit a franchise
-
 
 
 @app.route('/franchise/<int:franchise_id>/edit/', methods=['GET', 'POST'])
 def editFranchise(franchise_id):
     if 'username' not in login_session:
-	return redirect('/login')
+        return redirect('/login')
     editedFranchise = \
         session.query(Franchise).filter_by(id=franchise_id).one()
-    if request.method == 'POST':
-        if request.form['name']:
-           editedFranchise.name = request.form['name']
-        return redirect(url_for('showFranchises'))
-    else:
-        return render_template('editFranchise.html',
-                               franchise=editedFranchise)
     if Franchise.user_id != login_session['user_id']:
         return "<script>function myFunction(){alert('You are not authorized to\
         edit this franchise. please create your own franchise in order\
         to edit.');}</script><body onload='myFunction()'>"
-   # return 'This page will be for editing franchise %s' % franchise_id
+    if request.method == 'POST':
+        if request.form['name']:
+            editedFranchise.name = request.form['name']
+        return redirect(url_for('showFranchises'))
+    else:
+        return render_template('editFranchise.html',
+                               franchise=editedFranchise)
+
+# return 'This page will be for editing franchise %s' % franchise_id
 
 # Delete a franchise
 
@@ -309,9 +310,13 @@ def editFranchise(franchise_id):
 @app.route('/franchise/<int:franchise_id>/delete/', methods=['GET', 'POST'])
 def deleteFranchise(franchise_id):
     if 'username' not in login_session:
-	return redirect('/login')
+        return redirect('/login')
     franchiseToDelete = \
         session.query(Franchise).filter_by(id=franchise_id).one()
+    if Franchise.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('you are not authorized to\
+         delete this franchise.please create your own franchise to delete');}\
+         </script><body onLoad = 'myFunction()'>"
     if request.method == 'POST':
         session.delete(franchiseToDelete)
         session.commit()
@@ -319,24 +324,18 @@ def deleteFranchise(franchise_id):
     else:
         return render_template('deleteFranchise.html',
                                franchise=franchiseToDelete)
-    if Franchise.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('you are not authorized to\
-         delete this franchise.please create your own franchise to delete');}\
-         </script><body onLoad = 'myFunction()'>"
-     # return 'This page will be for deleting franchise %s' % franchise_id
 
+# return 'This page will be for deleting franchise %s' % franchise_id
 
 # Show a franchise TEAM
 
 
 @app.route('/franchise/<int:franchise_id>/')
-@app.route('/franchise/<int:franchise_id>/menu/')
+@app.route('/franchise/<int:franchise_id>/team/')
 def showTeam(franchise_id):
-    if 'username' not in login_session:
-        return redirect('/login')
     franchise = session.query(Franchise).filter_by(id=franchise_id).one()
-    players = \
-        session.query(TeamPlayer).filter_by(franchise_id=franchise_id).all()
+    players = session.query(TeamPlayer).filter_by(
+        franchise_id=franchise_id).all()
     return render_template('team.html', players=players, franchise=franchise)
     # return 'This page is the team for franchise %s' % franchise_id
 
@@ -349,10 +348,10 @@ def newTeamPlayer(franchise_id):
         return redirect('/login')
     if request.method == 'POST':
         newPlayer = TeamPlayer(name=request.form['name'],
-                              description=request.form['description'],
-                              price=request.form['price'],
-                              course=request.form['course'],
-                              franchise_id=franchise_id)
+                               description=request.form['description'],
+                               price=request.form['price'],
+                               course=request.form['course'],
+                               franchise_id=franchise_id)
         session.add(newPlayer)
         session.commit()
 
@@ -371,8 +370,12 @@ def newTeamPlayer(franchise_id):
            methods=['GET', 'POST'])
 def editTeamPlayer(franchise_id, team_id):
     if 'username' not in login_session:
-	return redirect('/login')
+        return redirect('/login')
     editedPlayer = session.query(TeamPlayer).filter_by(id=team_id).one()
+    if login_session['user_id'] != TeamPlayer.user_id:
+        return "<script>function myFunction() {alert('You are not authorized to\
+          edit  this team player.Please create your own tourist in\
+          order to edit players.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         if request.form['name']:
             editedPlayer.name = request.form['name']
@@ -387,13 +390,10 @@ def editTeamPlayer(franchise_id, team_id):
         return redirect(url_for('showTeam', franchise_id=franchise_id))
     else:
 
-        return render_template('editteamplayer.html', franchise_id=franchise_id,
+        return render_template('editteamplayer.html',
+                               franchise_id=franchise_id,
                                team_id=team_id, player=editedPlayer)
-    if login_session['user_id'] != TeamPlayer.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to\
-          edit  this team player.Please create your own tourist in\
-          order to edit players.');}</script><body onload='myFunction()'>"
-        # return 'This page is for editing team player %s' % team_id
+# return 'This page is for editing team player %s' % team_id
 
 # Delete a team player
 
@@ -402,10 +402,13 @@ def editTeamPlayer(franchise_id, team_id):
            methods=['GET', 'POST'])
 def deleteTeamPlayer(franchise_id, team_id):
     if 'username' not in login_session:
-	return redirect('/login')
+        return redirect('/login')
     playerToDelete = \
         session.query(TeamPlayer).filter_by(id=team_id).one()
-
+    if login_session['user_id'] != TeamPlayer.user_id:
+        return "<script>function myFunction() {alert ('you are not authorized to\
+         delete team player.please create your own franchise\
+         in order to delete player');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         session.delete(playerToDelete)
         session.commit()
@@ -413,13 +416,8 @@ def deleteTeamPlayer(franchise_id, team_id):
     else:
         return render_template('deleteteamplayer.html',
                                player=playerToDelete)
-    if login_session['user_id'] != TeamPlayer.user_id:
-        return "<script>function myFunction() {alert ('you are not authorized to\
-         delete team player.please create your own franchise\
-         in order to delete player');}</script><body onload='myFunction()'>"
 
     # return "This page is for deleting team player %s" % team_id
-
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
