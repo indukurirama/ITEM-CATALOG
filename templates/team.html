@@ -1,15 +1,18 @@
 <html>
-	
 <head>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
-<link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Jua|Shadows+Into+Light" rel="stylesheet">
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 	</head>
 	<body>
-	<center>
-		<h1 id = "hea">{{ franchise.name }}</h1>		
-	</center>	
-		{% with messages = get_flashed_messages() %}
+	<div class = 'pane'>
+		<div class = 'header'>
+		<h1>{{ franchise.name }}</h1>
+	</div>
+
+	<a href = '{{url_for('newTeamPlayer', franchise_id = franchise.id) }}'>Create New player</a>
+
+
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
       {% if messages %}
           
         <ul>
@@ -20,117 +23,49 @@
         {% endif %}
     {% endwith %}
 
-    {% if PLAYERS !=[] %}
+</div>
 
-		<br><center><a href = "{{url_for('newTeamPlayer', franchise_id = franchise.id )}}" id = "cent">Create New Player</a></center>
-	</br></br>
 
-	<h2 class = "bod">BATSMANs</h2>
+		{% for i in players %}
+    <div class = 'nameAndPrice'>
+		<span class = 'name'><p>{{i.name}}</p></span>
 
-		{% for i in items %}
-		{% if i.course == 'BATSMAN' %}
+		<span class = 'price'>
 
-		<p>{{i.name}}</p>
+
+		<p>{{i.price}} </p>
+	</span>
+	</div>
+
 	
-
+	
+	<div class = 'description'>
 		<p>{{i.description}}</p>
-	
+	</div>
 
-		<p>{{i.price}}</p>
 	
-		<a href='{{url_for('editTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Edit</a>
-	</br>
-	<a href='{{url_for('deleteTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Delete</a>
-</br>
-</br>
-		{% endif %}
+	
+	<div class = "editdeletepane">
+
+	<a href='{{url_for('editTeamPlayer',franchise_id = franchise.id, team_id=i.id)}}' >Edit</a>
+	<a href='{{url_for('deleteTeamPlayer', franchise_id = franchise.id, team_id=i.id)}}' >
+	Delete</a>
+	</div>
+
+
+
 
 		{% endfor %}
 
-		
 
-		</br></br>
-
-	<h2 class = "bod">BOWLERs</h2>
-
-		{% for i in items %}
-		{% if i.course == 'BOWLER' %}
-
-		<p>{{i.name}}</p>
-	
-
-		<p>{{i.description}}</p>
-	
-
-		<p>{{i.price}}</p>
-	
-		<a href='{{url_for('editTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Edit</a>
-	</br>
-	<a href='{{url_for('deleteTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Delete</a>
-</br>
-</br>
-        {% endif %}
-
-		{% endfor %}
 		
 		
 
-		</br></br>
-
-	<h2 class = "bod">ALLROUNDERs</h2>
-
-		{% for i in items %}
-		{% if i.course == 'ALLROUNDER' %}
-
-		<p>{{i.name}}</p>
-	
-
-		<p>{{i.description}}</p>
-	
-
-		<p>{{i.price}}</p>
-	
-		<a href='{{url_for('editTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Edit</a>
-	
-	<a href='{{url_for('deleteTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Delete</a>
-</br>
-</br>
-		{% endif %}
-
-		{% endfor %}
-		
-		
-
-		</br></br>
-
-	<h2 class = "bod">WICKETKEEPERs</h2>
-
-		{% for i in items %}
-		{% if i.course == 'WICKETKEEPER' %}
-
-		<p>{{i.name}}</p>
-	
-
-		<p>{{i.description}}</p>
-	
-
-		<p>{{i.price}}</p>
-
-		<a href='{{url_for('editTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Edit</a>
-	</br>
-	<a href='{{url_for('deleteTeamPlayer', franchise_id = franchise.id, team_id=i.id ) }}' >Delete</a>
-</br>
-</br>
-{% endif %}
-
-		{% endfor %}
-		
-		
-
-		{% else %}
-		<p> You currently have no team items. <p>
-		<a href = "{{url_for('newTeamPlayer', franchise_id = franchise.id )}}" id = "gre">Create New Player</a>
-			{% endif %}
+</div>
+</div>
 	</body>
 
-</html
+
+
+
+</html>
