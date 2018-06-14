@@ -290,7 +290,7 @@ def editFranchise(franchise_id):
         return redirect('/login')
     editedFranchise = \
         session.query(Franchise).filter_by(id=franchise_id).one()
-    if Franchise.user_id != login_session['user_id']:
+    if editedFranchise.user_id != login_session['user_id']:
         return "<script>function myFunction(){alert('You are not authorized to\
         edit this franchise. please create your own franchise in order\
         to edit.');}</script><body onload='myFunction()'>"
@@ -313,7 +313,7 @@ def deleteFranchise(franchise_id):
         return redirect('/login')
     franchiseToDelete = \
         session.query(Franchise).filter_by(id=franchise_id).one()
-    if Franchise.user_id != login_session['user_id']:
+    if franchiseToDelete.user_id != login_session['user_id']:
         return "<script>function myFunction() {alert('you are not authorized to\
          delete this franchise.please create your own franchise to delete');}\
          </script><body onLoad = 'myFunction()'>"
@@ -372,7 +372,7 @@ def editTeamPlayer(franchise_id, team_id):
     if 'username' not in login_session:
         return redirect('/login')
     editedPlayer = session.query(TeamPlayer).filter_by(id=team_id).one()
-    if login_session['user_id'] != TeamPlayer.user_id:
+    if login_session['user_id'] != editedPlayer.user_id:
         return "<script>function myFunction() {alert('You are not authorized to\
           edit  this team player.Please create your own tourist in\
           order to edit players.');}</script><body onload='myFunction()'>"
@@ -405,7 +405,7 @@ def deleteTeamPlayer(franchise_id, team_id):
         return redirect('/login')
     playerToDelete = \
         session.query(TeamPlayer).filter_by(id=team_id).one()
-    if login_session['user_id'] != TeamPlayer.user_id:
+    if login_session['user_id'] != playerToDelete.user_id:
         return "<script>function myFunction() {alert ('you are not authorized to\
          delete team player.please create your own franchise\
          in order to delete player');}</script><body onload='myFunction()'>"
